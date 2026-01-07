@@ -38,6 +38,10 @@ function! ProportionalResize#Record#RecordDimensions()
     return s:dimensions
 endfunction
 
+function! s:TriggerCursorHold()
+    call feedkeys(":\<Esc>", 'n')
+endfunction
+
 function! s:AfterResize()
     if exists('s:save_updatetime')
 	let &updatetime = s:save_updatetime
@@ -66,12 +70,12 @@ function! s:RecordResize()
 	let &updatetime = g:ProportionalResize_UpdateTime
     endif
 
-    " It seems that during resizing, no CursorHold events are fired. As
-    " triggering a CursorHold update can badly affect Vim (we might be in the
-    " middle of a query of an encryption password, for example), temporarily
-    " install additional frequent autocmds instead.
-    autocmd! ProportionalResize CursorHold,CursorHoldI,CursorMoved,CursorMovedI,BufLeave,WinLeave * call <SID>AfterResize() |
-    \   execute 'autocmd! ProportionalResize CursorHold,CursorHoldI,CursorMoved,CursorMovedI,BufLeave,WinLeave *' |
+    " Force another CursorHold update so that we definitely get a call back
+    " after the resize. (It seems that during resizing, no CursorHold events are
+    " fired.)
+    call s:TriggerCursorHold()
+
+    autocmd! ProportionalResize VimResized,CursorHold,CursorHoldI * call <SID>AfterResize() |
     \   execute 'autocmd! ProportionalResize' g:ProportionalResize_RecordEvents '* call ProportionalResize#Record#RecordDimensions()'
 endfunction
 
