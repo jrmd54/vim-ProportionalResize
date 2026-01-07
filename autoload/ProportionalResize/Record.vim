@@ -75,8 +75,6 @@ function! s:RecordResize()
     " fired.)
     call s:TriggerCursorHold()
 
-    autocmd! ProportionalResize VimResized,CursorHold,CursorHoldI * call <SID>AfterResize() |
-    \   execute 'autocmd! ProportionalResize' g:ProportionalResize_RecordEvents '* call ProportionalResize#Record#RecordDimensions()'
 endfunction
 
 function! ProportionalResize#Record#InstallHooks()
@@ -89,6 +87,8 @@ function! ProportionalResize#Record#InstallHooks()
 	    autocmd VimEnter,GUIEnter      * call ProportionalResize#Record#RecordDimensions()
 	    execute 'autocmd' g:ProportionalResize_RecordEvents '* call ProportionalResize#Record#RecordDimensions()'
 	    autocmd VimResized             * call <SID>RecordResize()
+        autocmd! ProportionalResize VimResized,CursorHold,CursorHoldI * call <SID>AfterResize() |
+        \   execute 'autocmd! ProportionalResize' g:ProportionalResize_RecordEvents '* call ProportionalResize#Record#RecordDimensions()'
 	endif
     augroup END
 endfunction
