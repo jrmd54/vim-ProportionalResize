@@ -55,7 +55,7 @@ function! s:AfterResize()
 	return
     endif
     if s:dimensions.winNum != winnr('$')
-	call ingo#msg#ErrorMsg('Stale window dimensions record; cannot correct window sizes')
+	" call ingo#msg#ErrorMsg('Stale window dimensions record; cannot correct window sizes')
 	call ProportionalResize#Record#RecordDimensions()
 	return
     endif
